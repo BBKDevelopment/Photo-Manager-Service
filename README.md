@@ -1,10 +1,16 @@
 # Photo Manager Service
 
+<div align="center">
+
+[![photo_manager_service][build_status_badge]][workflow_link]
+![coverage][coverage_badge]
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
 [![Powered by Mason](https://img.shields.io/endpoint?url=https%3A%2F%2Ftinyurl.com%2Fmason-badge)](https://github.com/felangel/mason)
 [![License: MIT][license_badge]][license_link]
 
-Photo Manager Service
+</div>
+
+This service wraps the [photo_manager][photo_manager_link] and provides secure usage of the plugin by handling exceptions.
 
 ## Installation 💻
 
@@ -15,6 +21,9 @@ Add `photo_manager_service` to your `pubspec.yaml`:
 ```yaml
 dependencies:
   photo_manager_service:
+    git:
+      url: https://github.com/BBKDevelopment/Photo-Manager-Service.git
+      ref: v1.0.0
 ```
 
 Install it:
@@ -57,6 +66,10 @@ genhtml coverage/lcov.info -o coverage/
 open coverage/index.html
 ```
 
+[photo_manager_link]: https://github.com/fluttercandies/flutter_photo_manager
+[workflow_link]: https://github.com/BBKDevelopment/Photo-Manager-Service/actions/workflows/main.yaml
+[build_status_badge]: https://github.com/BBKDevelopment/Photo-Manager-Service/actions/workflows/main.yaml/badge.svg
+[coverage_badge]: coverage_badge.svg
 [flutter_install_link]: https://docs.flutter.dev/get-started/install
 [github_actions_link]: https://docs.github.com/en/actions/learn-github-actions
 [license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
