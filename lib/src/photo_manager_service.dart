@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 /// An exception thrown when the permission is denied.
@@ -26,9 +27,37 @@ class OpenSettingsException implements Exception {}
 /// {@endtemplate}
 class PhotoManagerService {
   /// {@macro photo_manager_service}
-  PhotoManagerService() : _isAuthenticated = false;
+  PhotoManagerService()
+      : _isAuthenticated = false,
+        _permissionState = null,
+        _assetPaths = null,
+        _assets = null;
+
+  /// A named constructor of the [PhotoManagerService] for testing purposes in
+  /// which it is possible to predefine some variables.
+  ///
+  /// ```dart
+  /// final photoManagerService = PhotoManagerService.test(
+  ///   isAuthenticated: true,
+  ///   assetPaths: [],
+  ///   assets: [],
+  /// );
+  /// ```
+  @visibleForTesting
+  PhotoManagerService.test({
+    bool isAuthenticated = false,
+    PermissionState? permissionState,
+    List<AssetPathEntity>? assetPaths,
+    List<AssetEntity>? assets,
+  })  : _isAuthenticated = isAuthenticated,
+        _permissionState = permissionState,
+        _assetPaths = assetPaths,
+        _assets = assets;
 
   bool _isAuthenticated;
+  final PermissionState? _permissionState;
+  final List<AssetPathEntity>? _assetPaths;
+  final List<AssetEntity>? _assets;
 
   /// Whether the permission is granted.
   bool get isAuthenticated => _isAuthenticated;
@@ -39,7 +68,7 @@ class PhotoManagerService {
   Future<void> requestPermission() async {
     final PermissionState result;
     try {
-      result = await PhotoManager.requestPermissionExtend();
+      result = _permissionState ?? await PhotoManager.requestPermissionExtend();
     } catch (_) {
       log('Failed to request permission!', name: 'PhotoManagerService');
       throw PermissionException();
@@ -66,13 +95,14 @@ class PhotoManagerService {
 
     final List<AssetEntity>? assets;
     try {
-      final assetPaths =
+      final assetPaths = _assetPaths ??
           await PhotoManager.getAssetPathList(type: RequestType.audio);
       final recentAssetPath = assetPaths.isNotEmpty ? assetPaths[0] : null;
-      assets = await recentAssetPath?.getAssetListRange(
-        start: 0,
-        end: 1000,
-      );
+      assets = _assets ??
+          await recentAssetPath?.getAssetListRange(
+            start: 0,
+            end: 1000,
+          );
     } catch (_) {
       log('Failed to get audio assets!', name: 'PhotoManagerService');
       throw GetAudioException();
@@ -99,10 +129,11 @@ class PhotoManagerService {
 
     final List<AssetEntity>? assets;
     try {
-      final assetPaths =
+      final assetPaths = _assetPaths ??
           await PhotoManager.getAssetPathList(type: RequestType.video);
       final recentAssetPath = assetPaths.isNotEmpty ? assetPaths[0] : null;
-      assets = await recentAssetPath?.getAssetListRange(start: 0, end: 1000);
+      assets = _assets ??
+          await recentAssetPath?.getAssetListRange(start: 0, end: 1000);
     } catch (_) {
       log('Failed to get video assets!', name: 'PhotoManagerService');
       throw GetVideoException();
