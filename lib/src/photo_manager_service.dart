@@ -33,7 +33,16 @@ class PhotoManagerService {
         _assetPaths = null,
         _assets = null;
 
-  /// {@macro photo_manager_service}
+  /// A named constructor of the [PhotoManagerService] for testing purposes in
+  /// which it is possible to predefine some variables.
+  ///
+  /// ```dart
+  /// final photoManagerService = PhotoManagerService.test(
+  ///   isAuthenticated: true,
+  ///   assetPaths: [],
+  ///   assets: [],
+  /// );
+  /// ```
   @visibleForTesting
   PhotoManagerService.test({
     bool isAuthenticated = false,
